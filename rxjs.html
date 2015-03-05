@@ -42,8 +42,36 @@
             function(n1,n2){ return n1 + n2;}
             )
             .subscribe(function(n) {console.log(n);});
+
+        var inputStream =
+            Rx.Observable.fromEvent($('#query', 'input'))
+                .map(function(e) {
+                    return e.target.value;
+                });
+        var queryStream = inputStream
+            .throttle(500)
+            .filter(function(text) {return text.length > 0;})
+            .distinctUntilChanged()
+            .map(function(text) {
+                return 'https://api.github.com/search/repositories?q=' + text;
+            });
+
+        var repositoriesStream = queryStream
+            .flatMap(function(query) {
+                var promise = $.ajax({url: query});
+                return Rx.Observable.fromPromise(promise);
+            })
+            .map(function(res) {
+                return res.items;
+            });
+
+        repositoriesStream.subscribe(function(repos) {
+            console.log(repos);
+        });
+
     </script>
 </head>
 <body>
+    <input type="text" id="query" name="query" />
 </body>
 </html>
