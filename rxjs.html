@@ -1,0 +1,16 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/2.4.1/rx.lite.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.js"></script>
+    <script>
+        var stream = Rx.Observable.create(function(subscriber) {
+            subscriber.onNext(42);
+            subscriber.onCompleted();
+        });
+        stream.subscribe(function(n) {console.log(n)});
+        Rx.Observable.from([1,2,3]).subscribe(function(n) {console.log(n)});
+    </script>
+</head>
+<body>
+</body>
+</html>
