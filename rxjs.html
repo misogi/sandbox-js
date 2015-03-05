@@ -9,6 +9,39 @@
         });
         stream.subscribe(function(n) {console.log(n)});
         Rx.Observable.from([1,2,3]).subscribe(function(n) {console.log(n)});
+        var stream1 = Rx.Observable.from([1,2,3]);
+        var stream2 = function(n) {
+            return Rx.Observable.from([n+1,n+2,n+3]);
+        };
+        var stream3 = Rx.Observable.from([10,20,30]);
+
+        stream1.map(function(n){return n*2;})
+            .subscribe(function(n){console.log(n)});
+
+        stream1.flatMap(function(n) {return stream2(n)})
+            .subscribe(function(n) {console.log(n)});
+
+        Rx.Observable.from(['けんさく'])
+            .flatMap(function(param) {
+                var url = 'https://cors-test.appspot.com/test';
+                var promise = $.ajax(url);
+                return Rx.Observable.fromPromise(promise);
+            })
+            .subscribe(function(res) {console.log(res);});
+
+        Rx.Observable.fromEvent(document, 'click')
+            .throttle(250)
+            .subscribe(function(n) {console.log(n);});
+
+        Rx.Observable.merge(stream1,stream3)
+            .subscribe(function(n) {console.log(n);});
+
+        Rx.Observable.combineLatest(
+            stream1,
+            stream3,
+            function(n1,n2){ return n1 + n2;}
+            )
+            .subscribe(function(n) {console.log(n);});
     </script>
 </head>
 <body>
