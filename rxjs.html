@@ -44,10 +44,15 @@
             .subscribe(function(n) {console.log(n);});
 
         var inputStream =
-            Rx.Observable.fromEvent($('#query', 'input'))
+            Rx.Observable.fromEvent($('#query'), 'input')
                 .map(function(e) {
                     return e.target.value;
                 });
+
+        inputStream.subscribe(function(hoge) {
+          console.log(hoge);
+        });
+
         var queryStream = inputStream
             .throttle(500)
             .filter(function(text) {return text.length > 0;})
@@ -65,9 +70,9 @@
                 return res.items;
             });
 
-        repositoriesStream.subscribe(function(repos) {
-            console.log(repos);
-        });
+        // repositoriesStream.subscribe(function(repos) {
+        //     console.log(repos);
+        // });
 
     </script>
 </head>
